@@ -24,7 +24,7 @@ body {
   scrollbar-color: #4a4a4a #f1f1f1;
   scrollbar-width: thin;
   scroll-behavior: smooth;
-  transition: background 0.2s ease-in-out;
+  transition: all 0.5s ease-in-out;
 }
 p {
   font-family: var(--fontInter);
