@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gerador de Convites</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+  <style>
+    .layout { display: grid; grid-template-columns: 380px 1fr; gap: 24px; padding: 28px 16px; max-width: 1240px; margin: 0 auto; align-items: start; }
+    .painel { display: flex; flex-direction: column; gap: 16px; }
+    .painel h2 { font-size: 20px; margin: 0; }
+    .modelos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+    .modelos button { border: 2px solid var(--line); background: var(--bg); border-radius: 10px; padding: 8px 4px; font: inherit; font-size: 12px; font-weight: 600; color: var(--text); cursor: pointer; }
+    .modelos button.ativo { border-color: var(--accent); color: var(--accent); }
+    .dica { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    #cfgImagem { display: none; }
+    #cfgImagem.on { display: block; }
+    .rng { display: grid; grid-template-columns: 90px 1fr 44px; align-items: center; gap: 8px; font-size: 13px; margin-top: 6px; }
+    .rng span:last-child { text-align: right; color: var(--muted); }
+
+    .palco { position: sticky; top: 88px; display: flex; flex-direction: column; gap: 16px; }
+    .previa { display: flex; justify-content: center; }
+    .previa .mini { width: min(100%, 380px); }
+    .barra-acoes { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .progresso { font-size: 13px; color: var(--muted); }
+
+    .lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+    .item .mini { width: 100%; }
+    .item .nm { font-size: 13px; font-weight: 600; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item .cd { font-size: 11px; color: var(--muted); letter-spacing: 2px; display: flex; justify-content: space-between; align-items: center; }
+    .item .cd button { border: 0; background: none; color: var(--accent); cursor: pointer; font: inherit; font-size: 12px; font-weight: 600; letter-spacing: 0; }
+
+    #render { position: fixed; left: -10000px; top: 0; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .palco { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topo">
+    <div class="wrap">
+      <a class="marca" href="index.html">Convite<span>Certo</span></a>
+      <nav class="nav">
+        <a href="index.html#modelos">Modelos</a>
+        <a href="gerador.html" class="ativo">Gerador</a>
+        <a href="portaria.html">Portaria</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="painel">
+      <section class="cartao">
+        <h2>1 · Modelo</h2>
+        <div class="modelos" id="modelos"></div>
+
+        <div id="cfgImagem">
+          <label for="fImg">Arte do convite (PNG/JPG, sem nome nem QR)</label>
+          <input type="file" id="fImg" accept="image/*">
+          <div class="dica">Ajuste onde aparece o nome e o QR code:</div>
+          <div class="rng"><span>Nome ↔</span><input type="range" data-k="nomeX" min="0" max="100" step="0.5"><span></span></div>
+          <div class="rng"><span>Nome ↕</span><input type="range" data-k="nomeY" min="0" max="100" step="0.5"><span></span></div>
+          <div class="rng"><span>Tamanho</span><input type="range" data-k="nomeTam" min="2" max="15" step="0.25"><span></span></div>
+          <div class="rng"><span>QR ↔</span><input type="range" data-k="qrX" min="0" max="100" step="0.5"><span></span></div>
+          <div class="rng"><span>QR ↕</span><input type="range" data-k="qrY" min="0" max="100" step="0.5"><span></span></div>
+          <div class="rng"><span>QR tamanho</span><input type="range" data-k="qrTam" min="10" max="50" step="0.5"><span></span></div>
+          <div class="lin2">
+            <div><label for="fCor">Cor do texto</label><input type="color" id="fCor"></div>
+            <div><label for="fFonte">Letra</label>
+              <select id="fFonte">
+                <option value="'Great Vibes', cursive">Caligrafia</option>
+                <option value="'Playfair Display', serif">Clássica</option>
+                <option value="'Montserrat', sans-serif">Moderna</option>
+                <option value="'Poppins', sans-serif">Arredondada</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cartao" id="cfgEvento">
+        <h2>2 · Evento</h2>
+        <label for="eTitulo">Título / anfitriões</label><input id="eTitulo" data-e="titulo">
+        <label for="eTipo">Tipo de evento</label><input id="eTipo" data-e="tipo">
+        <div class="lin2">
+          <div><label for="eData">Data</label><input type="date" id="eData" data-e="data"></div>
+          <div><label for="eHora">Hora</label><input type="time" id="eHora" data-e="hora"></div>
+        </div>
+        <label for="eLocal">Local</label><input id="eLocal" data-e="local">
+        <label for="eMsg">Mensagem</label><textarea id="eMsg" data-e="mensagem" style="min-height:70px"></textarea>
+      </section>
+
+      <section class="cartao">
+        <h2>3 · Lista de convidados</h2>
+        <label for="fLista">Um convidado por linha: <code>Nome; Mesa; Acompanhantes</code></label>
+        <textarea id="fLista" placeholder="Maria Silva; 3; 1&#10;João Pedro; 5&#10;Família Costa; 2; 3"></textarea>
+        <label for="fCsv">…ou importar ficheiro CSV (Excel → Guardar como CSV)</label>
+        <input type="file" id="fCsv" accept=".csv,.txt">
+        <div class="dica" id="contagem">0 convidados</div>
+      </section>
+    </aside>
+
+    <main class="palco">
+      <section class="cartao">
+        <div class="barra-acoes" style="justify-content:space-between;margin-bottom:14px">
+          <h2 style="margin:0;font-size:20px">Pré-visualização</h2>
+          <span class="muted" style="font-size:13px" id="prevNome"></span>
+        </div>
+        <div class="previa"><div class="mini" id="previa"></div></div>
+      </section>
+
+      <section class="cartao">
+        <div class="barra-acoes">
+          <button class="btn prim" id="bGerar">Gerar convites</button>
+          <button class="btn" id="bZip" disabled>Descarregar todos (ZIP)</button>
+          <button class="btn" id="bCsv" disabled>Lista para a portaria (CSV)</button>
+          <span class="progresso" id="progresso"></span>
+        </div>
+        <div class="dica">O ZIP inclui uma imagem PNG por convidado e o ficheiro <code>portaria.csv</code> com os códigos para validar à entrada.</div>
+        <div class="lista" id="lista" style="margin-top:18px"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="render"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="assets/templates.js"></script>
+  <script>
+    injetarCSSModelos();
+    const $ = (id) => document.getElementById(id);
+
+    const estado = {
+      modelo: new URLSearchParams(location.search).get("modelo") || "dourado",
+      eventoId: gerarCodigo(6),
+      evento: {},
+      convidados: [],
+      gerados: [],
+      imagem: { src: "", w: 600, h: 900, nomeX: 50, nomeY: 45, nomeTam: 6, nomeCor: "#222222", nomeFonte: "'Great Vibes', cursive", qrX: 50, qrY: 82, qrTam: 24 },
+    };
+
+    /* ---------- modelos ---------- */
+    TEMPLATES.forEach((t) => {
+      const b = document.createElement("button");
+      b.textContent = t.id === "imagem" ? "O meu modelo" : t.nome;
+      b.dataset.id = t.id;
+      b.onclick = () => escolherModelo(t.id);
+      $("modelos").appendChild(b);
+    });
+
+    function escolherModelo(id) {
+      estado.modelo = obterModelo(id).id;
+      document.querySelectorAll("#modelos button").forEach((b) => b.classList.toggle("ativo", b.dataset.id === estado.modelo));
+      $("cfgImagem").classList.toggle("on", estado.modelo === "imagem");
+      $("cfgEvento").style.display = estado.modelo === "imagem" ? "none" : "";
+      if (estado.modelo !== "imagem") {
+        const ex = EXEMPLOS_EVENTO[estado.modelo];
+        document.querySelectorAll("[data-e]").forEach((el) => { if (!el.dataset.mexido) el.value = ex[el.dataset.e] || ""; });
+      }
+      lerEvento();
+      invalidar();
+    }
+
+    /* ---------- evento ---------- */
+    function lerEvento() {
+      document.querySelectorAll("[data-e]").forEach((el) => { estado.evento[el.dataset.e] = el.value.trim(); });
+      atualizarPrevia();
+    }
+    document.querySelectorAll("[data-e]").forEach((el) => el.addEventListener("input", () => { el.dataset.mexido = "1"; lerEvento(); invalidar(); }));
+
+    /* ---------- modelo por imagem ---------- */
+    document.querySelectorAll("#cfgImagem input[type=range]").forEach((r) => {
+      r.value = estado.imagem[r.dataset.k];
+      r.nextElementSibling.textContent = r.value;
+      r.addEventListener("input", () => { estado.imagem[r.dataset.k] = Number(r.value); r.nextElementSibling.textContent = r.value; atualizarPrevia(); invalidar(); });
+    });
+    $("fCor").value = estado.imagem.nomeCor;
+    $("fCor").oninput = (e) => { estado.imagem.nomeCor = e.target.value; atualizarPrevia(); invalidar(); };
+    $("fFonte").onchange = (e) => { estado.imagem.nomeFonte = e.target.value; atualizarPrevia(); invalidar(); };
+    $("fImg").onchange = (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      const rd = new FileReader();
+      rd.onload = () => {
+        const img = new Image();
+        img.onload = () => { Object.assign(estado.imagem, { src: rd.result, w: img.naturalWidth, h: img.naturalHeight }); atualizarPrevia(); invalidar(); };
+        img.src = rd.result;
+      };
+      rd.readAsDataURL(f);
+    };
+
+    /* ---------- lista de convidados ---------- */
+    function parseLista(texto) {
+      const linhas = texto.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+      if (!linhas.length) return [];
+      const sep = (linhas[0].match(/;/g) || []).length >= (linhas[0].match(/,/g) || []).length ? ";" : ",";
+      let cols = ["nome", "mesa", "acompanhantes"];
+      const cab = linhas[0].toLowerCase().split(sep).map((c) => c.trim());
+      if (cab.includes("nome")) {
+        cols = cab.map((c) => (c.startsWith("acomp") ? "acompanhantes" : c));
+        linhas.shift();
+      }
+      return linhas.map((l) => {
+        const v = l.split(sep).map((x) => x.trim().replace(/^"|"$/g, ""));
+        const o = {};
+        cols.forEach((c, i) => { o[c] = v[i] || ""; });
+        return o;
+      }).filter((o) => o.nome);
+    }
+
+    function lerLista() {
+      estado.convidados = parseLista($("fLista").value);
+      $("contagem").textContent = `${estado.convidados.length} convidado${estado.convidados.length === 1 ? "" : "s"}`;
+      atualizarPrevia();
+      invalidar();
+    }
+    $("fLista").addEventListener("input", lerLista);
+    $("fCsv").onchange = async (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      $("fLista").value = (await f.text()).replace(/^﻿/, "");
+      lerLista();
+    };
+
+    /* ---------- renderização ---------- */
+    function htmlConvite(convidado, codigo) {
+      return renderConvite(estado.modelo, {
+        evento: estado.evento,
+        convidado,
+        codigo,
+        qr: gerarQR(payloadQR(estado.eventoId, codigo)),
+        imagem: estado.imagem,
+      });
+    }
+
+    function alturaConvite() {
+      return estado.modelo === "imagem" && estado.imagem.src ? Math.round((CONVITE_W * estado.imagem.h) / estado.imagem.w) : CONVITE_H;
+    }
+
+    function encaixar(caixa, html) {
+      caixa.style.aspectRatio = `${CONVITE_W} / ${alturaConvite()}`;
+      caixa.innerHTML = `<div class="escala">${html}</div>`;
+      caixa.firstElementChild.style.transform = `scale(${caixa.clientWidth / CONVITE_W})`;
+    }
+    new ResizeObserver(() => document.querySelectorAll(".mini").forEach((m) => {
+      if (m.firstElementChild) m.firstElementChild.style.transform = `scale(${m.clientWidth / CONVITE_W})`;
+    })).observe(document.body);
+
+    function atualizarPrevia() {
+      const c = estado.convidados[0] || { nome: "Nome do Convidado", mesa: "4", acompanhantes: "1" };
+      $("prevNome").textContent = estado.convidados[0] ? `Exemplo: ${c.nome}` : "Exemplo";
+      encaixar($("previa"), htmlConvite(c, "EXEMPLO1"));
+    }
+
+    function invalidar() {
+      if (!estado.gerados.length) return;
+      estado.gerados = [];
+      $("lista").innerHTML = "";
+      $("bZip").disabled = $("bCsv").disabled = true;
+      $("progresso").textContent = "Alterações feitas — gere novamente.";
+    }
+
+    $("bGerar").onclick = () => {
+      if (!estado.convidados.length) { $("progresso").textContent = "Adicione pelo menos um convidado."; return; }
+      if (estado.modelo === "imagem" && !estado.imagem.src) { $("progresso").textContent = "Carregue a arte do seu modelo."; return; }
+      const usados = new Set();
+      estado.gerados = estado.convidados.map((c) => {
+        let codigo;
+        do { codigo = gerarCodigo(); } while (usados.has(codigo));
+        usados.add(codigo);
+        return { ...c, codigo };
+      });
+      const lista = $("lista");
+      lista.innerHTML = "";
+      estado.gerados.forEach((g, i) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `<div class="mini"></div><div class="nm" title="${esc(g.nome)}">${esc(g.nome)}</div>
+          <div class="cd"><span>${g.codigo}</span><button data-i="${i}">PNG ↓</button></div>`;
+        lista.appendChild(div);
+        encaixar(div.querySelector(".mini"), htmlConvite(g, g.codigo));
+      });
+      $("bZip").disabled = $("bCsv").disabled = false;
+      $("progresso").textContent = `${estado.gerados.length} convites gerados · evento ${estado.eventoId}`;
+    };
+
+    async function paraPNG(g) {
+      await document.fonts.ready;
+      const area = $("render");
+      area.innerHTML = htmlConvite(g, g.codigo);
+      await Promise.all([...area.querySelectorAll("img")].map((im) => im.decode().catch(() => {})));
+      const canvas = await html2canvas(area.firstElementChild, { scale: 2, backgroundColor: null, useCORS: true, logging: false });
+      return new Promise((ok) => canvas.toBlob(ok, "image/png"));
+    }
+
+    function nomeFicheiro(g, i) {
+      const base = g.nome.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_|_$/g, "");
+      return `${String(i + 1).padStart(3, "0")}_${base || "convidado"}_${g.codigo}.png`;
+    }
+
+    function descarregar(blob, nome) {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = nome;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    }
+
+    $("lista").onclick = async (e) => {
+      const b = e.target.closest("button[data-i]");
+      if (!b) return;
+      const i = Number(b.dataset.i);
+      b.textContent = "…";
+      descarregar(await paraPNG(estado.gerados[i]), nomeFicheiro(estado.gerados[i], i));
+      b.textContent = "PNG ↓";
+    };
+
+    function csvPortaria() {
+      const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+      const linhas = [["evento_id", "codigo", "nome", "mesa", "acompanhantes"].join(";")];
+      estado.gerados.forEach((g) => linhas.push([estado.eventoId, g.codigo, g.nome, g.mesa, g.acompanhantes].map(q).join(";")));
+      return new Blob(["﻿" + linhas.join("\n")], { type: "text/csv;charset=utf-8" });
+    }
+    const nomeEvento = () => (estado.evento.titulo || "evento").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-zA-Z0-9]+/g, "_");
+
+    $("bCsv").onclick = () => descarregar(csvPortaria(), `portaria_${nomeEvento()}_${estado.eventoId}.csv`);
+
+    $("bZip").onclick = async () => {
+      $("bZip").disabled = $("bGerar").disabled = true;
+      const zip = new JSZip();
+      for (let i = 0; i < estado.gerados.length; i++) {
+        $("progresso").textContent = `A criar imagens… ${i + 1}/${estado.gerados.length}`;
+        zip.file(`convites/${nomeFicheiro(estado.gerados[i], i)}`, await paraPNG(estado.gerados[i]));
+      }
+      zip.file("portaria.csv", csvPortaria());
+      $("progresso").textContent = "A comprimir…";
+      descarregar(await zip.generateAsync({ type: "blob" }), `convites_${nomeEvento()}_${estado.eventoId}.zip`);
+      $("progresso").textContent = `${estado.gerados.length} convites descarregados · evento ${estado.eventoId}`;
+      $("bZip").disabled = $("bGerar").disabled = false;
+    };
+
+    escolherModelo(estado.modelo);
+    document.fonts.ready.then(atualizarPrevia);
+  </script>
+</body>
+</html>

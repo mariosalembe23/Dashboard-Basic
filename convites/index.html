@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Convite Certo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+  <style>
+    .hero { padding: 72px 0 48px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
+    .hero h1 { font-size: clamp(36px, 5vw, 58px); }
+    .hero p { font-size: 18px; color: var(--muted); max-width: 520px; }
+    .hero .acoes { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+    .hero-mini { display: flex; justify-content: center; }
+    .hero-mini .mini { width: 300px; height: 450px; transform: rotate(-3deg); }
+
+    .seccao { padding: 56px 0 8px; }
+    .seccao > .wrap > h2 { font-size: clamp(28px, 4vw, 38px); }
+
+    .passos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+    .passo .n { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); font-weight: 700; margin-bottom: 12px; }
+    .passo h3 { font-size: 20px; }
+
+    .filtros { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0; }
+    .filtros button.ativo { background: var(--text); color: var(--bg); border-color: var(--text); }
+    .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
+    .modelo .mini { width: 100%; aspect-ratio: 2 / 3; }
+    .modelo .meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 12px; }
+    .modelo h3 { font-size: 18px; margin: 0; }
+    .modelo .cat { font-size: 12px; color: var(--muted); }
+
+    .vantagens { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 24px; }
+    .vantagens .ic { font-size: 26px; margin-bottom: 8px; }
+    .vantagens h3 { font-size: 17px; font-family: "Montserrat", sans-serif; font-weight: 700; }
+    .vantagens p { font-size: 14px; color: var(--muted); margin: 0; }
+
+    .cta { margin-top: 56px; background: var(--dark); color: #fff; border-radius: 20px; padding: 40px 28px; text-align: center; }
+    .cta p { color: #d6d3d1; }
+
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; padding-top: 40px; }
+      .hero-mini { order: -1; }
+      .hero-mini .mini { width: 220px; height: 330px; }
+      .passos, .vantagens { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topo">
+    <div class="wrap">
+      <a class="marca" href="index.html">Convite<span>Certo</span></a>
+      <nav class="nav">
+        <a href="#modelos" class="ativo">Modelos</a>
+        <a href="#como">Como funciona</a>
+        <a href="gerador.html">Gerador</a>
+        <a href="portaria.html">Portaria</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <div>
+        <span class="pill">Convites digitais com QR code</span>
+        <h1>Um convite único para cada convidado. Zero penetras.</h1>
+        <p>Escolha um modelo, envie a lista de convidados e nós geramos automaticamente um convite personalizado com nome e QR code exclusivo. No dia, a nossa equipa valida cada entrada à porta.</p>
+        <div class="acoes">
+          <a class="btn prim" href="#modelos">Ver modelos</a>
+          <a class="btn" href="gerador.html">Experimentar o gerador</a>
+        </div>
+      </div>
+      <div class="hero-mini"><div class="mini" id="heroMini"></div></div>
+    </section>
+
+    <section class="seccao" id="como">
+      <div class="wrap">
+        <span class="pill">Como funciona</span>
+        <h2>Três passos até à porta do evento</h2>
+        <div class="passos">
+          <div class="cartao passo"><div class="n">1</div><h3>Escolha o modelo</h3><p class="muted">Um dos nossos modelos ou a sua própria arte. Personalizamos cores, textos e dados do evento.</p></div>
+          <div class="cartao passo"><div class="n">2</div><h3>Envie a lista</h3><p class="muted">Excel ou CSV com os nomes (e mesa, se quiser). Cada convidado recebe um convite com o seu nome e um QR code único.</p></div>
+          <div class="cartao passo"><div class="n">3</div><h3>Controlo à entrada</h3><p class="muted">Os nossos agentes leem o QR no telemóvel. Cada código só entra uma vez — cópias e reenvios são bloqueados.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccao" id="modelos">
+      <div class="wrap">
+        <span class="pill">Catálogo</span>
+        <h2>Modelos de convites</h2>
+        <p class="muted">Todos os modelos são preenchidos automaticamente com o nome do convidado e o respetivo QR code.</p>
+        <div class="filtros" id="filtros"></div>
+        <div class="galeria" id="galeria"></div>
+      </div>
+    </section>
+
+    <section class="seccao">
+      <div class="wrap">
+        <span class="pill">Porquê nós</span>
+        <h2>Segurança e elegância no mesmo convite</h2>
+        <div class="vantagens">
+          <div class="cartao"><div class="ic">🔒</div><h3>Sem duplicados</h3><p>Cada QR é único e só é aceite uma vez à entrada.</p></div>
+          <div class="cartao"><div class="ic">⚡</div><h3>Automático</h3><p>Centenas de convites gerados a partir de uma lista, em minutos.</p></div>
+          <div class="cartao"><div class="ic">📱</div><h3>Envio fácil</h3><p>Imagem pronta para WhatsApp, e-mail ou impressão.</p></div>
+          <div class="cartao"><div class="ic">📊</div><h3>Relatório</h3><p>Saiba em tempo real quem já chegou ao evento.</p></div>
+        </div>
+
+        <div class="cta">
+          <h2>Pronto para o seu evento?</h2>
+          <p>Fale connosco e receba os convites do seu evento prontos a enviar.</p>
+          <a class="btn prim" href="gerador.html">Criar convites agora</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="wrap">© 2026 ConviteCerto · Convites digitais com controlo de acesso</div></footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="assets/templates.js"></script>
+  <script>
+    injetarCSSModelos();
+
+    const NOMES = { dourado: "Sr. e Sra. Fernandes", floral: "Família Domingos", festa: "Carla Mendes", minimal: "Eng. Pedro Santos", ceu: "Tia Rosa" };
+
+    function encaixar(caixa, html) {
+      caixa.innerHTML = `<div class="escala">${html}</div>`;
+      const alvo = caixa.firstElementChild;
+      const ajustar = () => { alvo.style.transform = `scale(${caixa.clientWidth / CONVITE_W})`; };
+      ajustar();
+      new ResizeObserver(ajustar).observe(caixa);
+    }
+
+    function exemplo(id) {
+      const codigo = gerarCodigo();
+      return renderConvite(id, {
+        evento: EXEMPLOS_EVENTO[id],
+        convidado: { nome: NOMES[id] || "Nome do Convidado", mesa: id === "minimal" ? "" : "7", acompanhantes: id === "dourado" ? 1 : 0 },
+        codigo,
+        qr: gerarQR(payloadQR("DEMO", codigo)),
+      });
+    }
+
+    encaixar(document.getElementById("heroMini"), exemplo("dourado"));
+
+    const modelos = TEMPLATES.filter((t) => t.id !== "imagem");
+    const categorias = ["Todos", ...new Set(modelos.flatMap((t) => t.categoria.split(" · ")))];
+    const filtros = document.getElementById("filtros");
+    const galeria = document.getElementById("galeria");
+
+    modelos.forEach((t) => {
+      const art = document.createElement("article");
+      art.className = "modelo";
+      art.dataset.cat = t.categoria;
+      art.innerHTML = `<div class="mini"></div>
+        <div class="meta"><div><h3>${esc(t.nome)}</h3><div class="cat">${esc(t.categoria)}</div></div>
+        <a class="btn sm" href="gerador.html?modelo=${t.id}">Usar</a></div>`;
+      galeria.appendChild(art);
+      encaixar(art.querySelector(".mini"), exemplo(t.id));
+    });
+
+    categorias.forEach((c, i) => {
+      const b = document.createElement("button");
+      b.className = "btn sm" + (i === 0 ? " ativo" : "");
+      b.textContent = c;
+      b.onclick = () => {
+        filtros.querySelectorAll("button").forEach((x) => x.classList.toggle("ativo", x === b));
+        galeria.querySelectorAll(".modelo").forEach((m) => { m.style.display = c === "Todos" || m.dataset.cat.includes(c) ? "" : "none"; });
+      };
+      filtros.appendChild(b);
+    });
+  </script>
+</body>
+</html>
